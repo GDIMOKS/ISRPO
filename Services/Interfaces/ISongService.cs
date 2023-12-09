@@ -1,6 +1,6 @@
-using Services.Song.Dtos;
+using Services.Dtos.Song;
 
-namespace Services.Song;
+namespace Services.Interfaces;
 
 public interface ISongService
 {
