@@ -40,6 +40,15 @@ services:
     depends_on:
       - prometheus
       - loki
+      - tempo
 
-
+  tempo:
+    image: grafana/tempo:latest
+    hostname: tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./config/tempo.yaml:/etc/tempo.yaml
+      - ./tempo-data:/tmp/tempo
+    ports:
+      - "4317:4317"
 

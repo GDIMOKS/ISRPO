@@ -4,6 +4,8 @@ using DataAccess;
 using LokiLoggingProvider.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Services.Interfaces;
 using Services.Realization;
 
@@ -33,11 +35,22 @@ builder.Host
     };
 });
 
+
 builder.Logging.AddLoki(loggerOptions =>
 {
     loggerOptions.Client = PushClient.Grpc;
     loggerOptions.StaticLabels.JobName = "Domain";
 });
+
+const string serviceName = "SongsService";
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService(serviceName))
+    .WithTracing(traceProviderBuilder =>
+        traceProviderBuilder
+            .AddSource(serviceName)
+            .AddAspNetCoreInstrumentation(options => options.RecordException = true)
+            .AddOtlpExporter()
+        );
 
 var app = builder.Build();
 
