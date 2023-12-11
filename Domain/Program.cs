@@ -1,6 +1,7 @@
 using App.Metrics.AspNetCore;
 using App.Metrics.Formatters.Prometheus;
 using DataAccess;
+using LokiLoggingProvider.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
@@ -30,6 +31,12 @@ builder.Host
         endpointsOptions.MetricsEndpointOutputFormatter = new MetricsPrometheusProtobufOutputFormatter();
         endpointsOptions.EnvironmentInfoEndpointEnabled = false;
     };
+});
+
+builder.Logging.AddLoki(loggerOptions =>
+{
+    loggerOptions.Client = PushClient.Grpc;
+    loggerOptions.StaticLabels.JobName = "Domain";
 });
 
 var app = builder.Build();

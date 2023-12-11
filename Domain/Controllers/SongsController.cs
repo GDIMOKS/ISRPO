@@ -35,14 +35,20 @@ public class SongsController : ControllerBase
     }
     
     [HttpDelete("{id}")]
-    public void DeleteSong([FromRoute]int id)
+    public IActionResult DeleteSong([FromRoute]int id)
     {
-        _songService.DeleteSong(id);
+        var result = _songService.DeleteSong(id);
+        
+        return (result) ? Ok(result) : BadRequest("Данного элемента не существует!");
+
     }
     
     [HttpPut("{id}")]
-    public void UpdateSong([FromRoute]int id, [FromBody]CreateSongDto dto)
+    public IActionResult UpdateSong([FromRoute]int id, [FromBody]CreateSongDto dto)
     {
-        _songService.UpdateSong(id, dto.Name, dto.Duration, dto.AuthorName, dto.AlbumName, dto.Genre);
+        var result = _songService.UpdateSong(id, dto.Name, dto.Duration, dto.AuthorName, dto.AlbumName, dto.Genre);
+        
+        return (result) ? Ok(result) : BadRequest("Данного элемента не существует!");
+
     }
 }

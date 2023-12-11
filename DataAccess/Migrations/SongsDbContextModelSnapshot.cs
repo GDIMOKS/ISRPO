@@ -50,7 +50,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("SongId");
 
-                    b.ToTable("Songs");
+                    b.ToTable("Songs", (string)null);
                 });
 #pragma warning restore 612, 618
         }
